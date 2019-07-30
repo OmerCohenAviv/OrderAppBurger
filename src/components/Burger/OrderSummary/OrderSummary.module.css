@@ -1,0 +1,36 @@
+.OrderSummary {
+    text-align: left;
+    padding: 15px;
+    
+}
+
+.OrderSummary span {
+    text-transform: capitalize;
+    font-size: 1.2em;
+}
+.OrderSummary p {
+    display: flex;
+    justify-items: center;
+}
+.OrderSummary button.Continue {
+    margin: 7px;
+    justify-self: start;
+    border: 1px solid greenyellow;
+    color: white;
+    font-size: 1.0em;
+    font-family: inherit;
+    padding: 7px;
+    background-color: seagreen;
+    cursor: pointer;
+}
+.OrderSummary button.Cancel {
+    margin: 7px;
+    justify-self: start;
+    border: 1px solid greenyellow;
+    color: white;
+    font-size: 1.0em;
+    font-family: inherit;
+    padding: 7px;
+    background-color: rgb(124, 7, 7);
+    cursor: pointer;
+}
