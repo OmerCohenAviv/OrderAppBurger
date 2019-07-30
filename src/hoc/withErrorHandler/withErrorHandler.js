@@ -23,7 +23,7 @@ const withErrorHandler = (WrappedComponent, axios) => {
         axios.interceptors.response.eject(this.responseInstance);
     }
     closeModalHandler = () => {
-        this.setState({error: null})
+        this.setState({error: null});
     }
 
     
