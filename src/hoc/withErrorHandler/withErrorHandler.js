@@ -18,7 +18,6 @@ const withErrorHandler = (WrappedComponent, axios) => {
         })
     }  
     componentWillUnmount () {
-        console.log('WillUnmount')
         axios.interceptors.request.eject(this.reqInstance);
         axios.interceptors.response.eject(this.responseInstance);
     }
@@ -38,5 +37,6 @@ const withErrorHandler = (WrappedComponent, axios) => {
             );
         };
     }
+    
 }
 export default withErrorHandler;

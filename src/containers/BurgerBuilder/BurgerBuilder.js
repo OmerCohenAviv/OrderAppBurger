@@ -65,22 +65,17 @@ class BurgerBuilder extends Component {
     }
 
     continueOrderHandler = () => {
-        this.setState({ loading: true })
-        const order = {
-            ingredients: this.state.ingredients,
-            price: this.state.totalPrice,
-            customer: {
-                name: 'Omer',
-                adress: {
-                    street: 'Poleg',
-                    zipCode: 'Random'
-                }
-            }
+        let ingredientsParams = [];
+        for (let i in this.state.ingredients) {
+            ingredientsParams.push(encodeURIComponent(i) + "=" + encodeURIComponent(this.state.ingredients[i]));
         }
-        axios.post('/orders.json', order)
-            .then(response => this.setState({ loading: false, purchasing: false }))
-            .catch(error => this.setState({ loading: false, purchasing: false }));
-    }
+        ingredientsParams.push('price=' + this.state.totalPrice)
+        const ingredientsString = ingredientsParams.join('&')
+        this.props.history.push({
+            pathname: '/checkout',
+            search: '?' + ingredientsString
+        });
+    };
     render() {
         const disableButton = {
             ...this.state.ingredients
@@ -111,7 +106,7 @@ class BurgerBuilder extends Component {
 
         let burger = this.state.error ? <p>Ingredients can't be loaded..</p> : <Spinner />
         if (this.state.ingredients) {
-            burger = ( <Fragment>
+            burger = (<Fragment>
                 <Burger ingredients={this.state.ingredients} />
                 <BuildControls
                     clickedPurchase={this.purchaseHandler}
@@ -119,7 +114,7 @@ class BurgerBuilder extends Component {
                     totalPrice={this.state.totalPrice}
                     ingredientAdd={this.addIngredientHandler}
                     ingredientRemove={this.removeIngredientHandler} />
-            </Fragment> );
+            </Fragment>);
         }
         return (
             <Fragment>
