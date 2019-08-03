@@ -1,14 +1,17 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 
 import Button from "../../../components/UI/Button/Button";
 import classes from './ContactData.module.css';
 import axios from '../../../axios-orders';
 import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
+import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler'
+import * as orderActions from '../../../store/actions/index'
 
 class ContactData extends Component {
     state = {
-        loading: false,
         orderForm: {
             name: {
                 elementType: 'input',
@@ -45,7 +48,8 @@ class ContactData extends Component {
                 value: '',
                 validation: {
                     required: true,
-                    minLength: 5
+                    minLength: 5,
+                    maxLength: 5
                 },
                 valid: false,
                 touched: false
@@ -85,12 +89,14 @@ class ContactData extends Component {
                     ]
                 },
                 validation: {},
-                value: '',
+                value: 'fastest',
                 valid: true
             }
         },
         overAllFormValid: false,
     };
+
+
 
     changeValueHandler = (event, formElementType) => {
         const updateOrderForm = {
@@ -113,23 +119,16 @@ class ContactData extends Component {
 
     orderHandler = (event) => {
         event.preventDefault();
-        this.setState({ loading: true })
         const formData = {};
         for (let formElementIndentifier in this.state.orderForm) {
             formData[formElementIndentifier] = this.state.orderForm[formElementIndentifier].value
         }
         let order = {
-            ingredients: this.props.ingredients,
+            ingredients: this.props.ings,
             price: this.props.totalPrice,
             PersonData: formData
         }
-        axios.post('/orders.json', order)
-            .then(response => {
-                this.setState({ loading: false })
-                this.props.history.push('/');
-            }
-            )
-            .catch(error => this.setState({ loading: false }));
+        this.props.onPurchaseBurger(order)
     }
 
     checkValid(value, rules) {
@@ -141,6 +140,9 @@ class ContactData extends Component {
         if (rules.minLength) {
             isValid = value.length <= rules.minLength && isValid;
         }
+        if (rules.maxLength) {
+            isValid = value.length >= rules.maxLength && isValid
+        }
         return isValid;
     }
     render() {
@@ -151,8 +153,8 @@ class ContactData extends Component {
                 config: this.state.orderForm[key]
             });
         }
-        let form = <Spinner />
-        form = (
+
+        let form = (
             <form onSubmit={this.orderHandler}>
                 {
                     formElementsArray.map(formElement => (
@@ -175,15 +177,36 @@ class ContactData extends Component {
                 </Button>
             </form>
         )
-        return (
+        if (this.props.loading) {
+            form = <Spinner />
+        };
+        let contactData = (
             <div className={classes.ContactData} >
                 <h4 style={{ fontSize: '1.6em' }}>Enter Your Contact Data</h4>
                 {form}
             </div>
         );
+        if (this.props.purchased) {
+            contactData = <Redirect to="/" />
+        }
+
+        return contactData
+
     }
 }
 
+const mapStateToProps = state => {
+    return {
+        ings: state.burgerBuilderReducer.ingredients,
+        totalPrice: state.burgerBuilderReducer.totalPrice,
+        loading: state.orderReducer.loading,
+        purchased: state.orderReducer.purchased
+    }
+}
 
-
-export default ContactData;
+const mapDispatchToProps = dispatch => {
+    return {
+        onPurchaseBurger: (orderData) => dispatch(orderActions.purchaseBurgerAction(orderData))
+    }
+}
+export default connect(mapStateToProps, mapDispatchToProps)(withErrorHandler(ContactData, axios));

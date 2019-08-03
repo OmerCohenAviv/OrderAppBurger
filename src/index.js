@@ -1,14 +1,36 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import { createStore, applyMiddleware, combineReducers, compose  } from "redux";
+import { Provider} from "react-redux";
+
+
 import './index.css';
 import App from './App';
+import thunk from 'redux-thunk';
 import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
+import BurgerBuilderReducer from './store/reducers/burgerBuilderReducer';
+import orderReducer from './store/reducers/orderReducer';
+
+//Combing Reducers.
+const combinedRed = combineReducers({
+    burgerBuilderReducer: BurgerBuilderReducer,
+    orderReducer: orderReducer
+});
+//Adding devtools
+const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+//Creating store
+const store = createStore(combinedRed, composeEnhancers(
+    applyMiddleware(thunk)
+));
 
 const app = (
-    <BrowserRouter>
-        <App />
-    </BrowserRouter>
+    <Provider store={ store }>
+        <BrowserRouter>
+            <App />
+        </BrowserRouter>
+    </Provider>
 )
 
 ReactDOM.render(app, document.getElementById('root'));
