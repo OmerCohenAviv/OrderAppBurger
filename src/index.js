@@ -11,11 +11,13 @@ import * as serviceWorker from './serviceWorker';
 import { BrowserRouter } from 'react-router-dom';
 import BurgerBuilderReducer from './store/reducers/burgerBuilderReducer';
 import orderReducer from './store/reducers/orderReducer';
+import authReducer from './store/reducers/auth';
 
 //Combing Reducers.
 const combinedRed = combineReducers({
     burgerBuilderReducer: BurgerBuilderReducer,
-    orderReducer: orderReducer
+    orderReducer: orderReducer,
+    authReducer: authReducer
 });
 //Adding devtools
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose

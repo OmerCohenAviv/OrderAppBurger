@@ -26,17 +26,20 @@ const checkErrorOrders = () => {
 };
 
 //Async fetching orders.
-export const setOrders = () => {
+export const setOrders = (token) => {
     return dispatch => {
         dispatch(startFetchOrder())
-        axios.get('/orders.json')
+        axios.get('/orders.json?auth=' + token)
             .then(response => {
+                console.log(response)
                 const fetchedOrders = [];
                 for (let key in response.data) {
-                    fetchedOrders.push({
-                        ...response.data[key],
-                        id: key
-                    })
+                    if (response.data[key].userId === localStorage.getItem('userId')) {
+                        fetchedOrders.push({
+                            ...response.data[key],
+                            id: key
+                        }) 
+                    }
                 }
                 dispatch(getOrders(fetchedOrders))
             })
@@ -69,10 +72,11 @@ const orderFail = (error) => {
     }
 }
 
-export const purchaseBurgerAction = (orderData) => {
+export const purchaseBurgerAction = (orderData, token) => {
     return dispatch => {
-    dispatch(orderStart())
-        axios.post('/orders.json', orderData)
+        dispatch(orderStart())
+        console.log('Token' + token)
+        axios.post('/orders.json?auth=' + token, orderData)
             .then(res => {
                 dispatch(orderSuccess(res.data.name, orderData));
             })

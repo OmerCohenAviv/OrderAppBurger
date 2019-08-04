@@ -22,6 +22,7 @@
 
 
 
+
 /* media Desktop */
 @media(min-width: 500px ) {
     .NavigationItem {
@@ -45,7 +46,9 @@
     .NavigationItem a.active {
         color: black;
         background-color: white;
-        border-bottom: 4px solid coral
+        border-bottom: 4px solid coral;
+        cursor: pointer;
+        
     }
     
 }

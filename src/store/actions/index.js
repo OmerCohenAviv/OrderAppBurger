@@ -12,3 +12,11 @@ export {
     purchaseInit,
     purchaseBurgerAction 
 } from './order';
+
+
+export {
+    checkAuth,
+    authRedirected,
+    authLogout,
+    auth
+} from './auth';

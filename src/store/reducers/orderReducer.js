@@ -13,7 +13,7 @@ const reducer = (state = initalState, action) => {
         //Getting orders from DB 
         case (actionTypes.GET_ORDERS): {
             const updateState = {
-                order: action.orders,
+                orders: action.orders,
                 error: false,
                 loading: false
             }
@@ -65,4 +65,4 @@ const reducer = (state = initalState, action) => {
 };
 
 
-export default reducer
+export default reducer;

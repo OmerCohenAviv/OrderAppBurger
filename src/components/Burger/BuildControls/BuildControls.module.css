@@ -27,7 +27,12 @@
     
 }
 
-
+.Strong {
+    color: salmon;
+    position: static;
+    display: flex;
+    box-sizing: border-box;
+}
 
 .OrderButton:hover, .OrderButton:active {
     background-color: #A0DB41;
