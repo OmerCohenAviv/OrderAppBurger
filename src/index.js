@@ -20,7 +20,7 @@ const combinedRed = combineReducers({
     authReducer: authReducer
 });
 //Adding devtools
-const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const composeEnhancers = process.env.NODE_ENV === 'development' ? window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__  : null || compose
 
 //Creating store
 const store = createStore(combinedRed, composeEnhancers(

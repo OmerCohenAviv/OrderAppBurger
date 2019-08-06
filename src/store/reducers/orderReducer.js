@@ -12,28 +12,17 @@ const reducer = (state = initalState, action) => {
     switch (action.type) {
         //Getting orders from DB 
         case (actionTypes.GET_ORDERS): {
-            const updateState = {
-                orders: action.orders,
-                error: false,
-                loading: false
-            }
+            const updateState = { orders: action.orders, error: false, loading: false }
             return updateObject(state, updateState)
         }
         // checkin if any error from fethcing orders
         case (actionTypes.CHECK_ERROR_ORDERS): {
-            const updateState = {
-                error: true,
-                loading: false
-            }
+            const updateState = { error: true, loading: false }
             return updateObject(state, updateState)
         }
         //Startin to fetch  orders from db...
         case (actionTypes.START_FETCH_ORDER): {
-            const updateState = {
-                order: action.orders,
-                loading: true
-            }
-            return updateObject(state, updateState)
+            return updateObject(state, { order: action.orders, loading: true })
         }
         //Ordering start...
         case (actionTypes.ORDER_START): {
@@ -43,10 +32,7 @@ const reducer = (state = initalState, action) => {
             return updateObject(state, updateState)
         }// Fixes redircting again after purchasing.
         case (actionTypes.PURCHASE_INIT): {
-            const updateState = {
-                purchased: false
-            }
-            return updateObject(state, updateState)
+            return updateObject(state, { purchased: false })
         }//Ordering success...
         case (actionTypes.ORDER_SUCCESS): {
             const newOrder = updateObject(action.orderData, { id: action.orderId })

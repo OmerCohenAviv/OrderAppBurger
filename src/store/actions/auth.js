@@ -5,7 +5,7 @@ import axios from 'axios'
 
 export const authRedirected = () => {
     return {
-        type: actionTypes.AUTH_REDIRECTED
+        type: actionTypes.AUTH_REDIRECTED,
     }
 }
 const authStart = () => {
@@ -54,14 +54,14 @@ export const auth = (email, password, isSignUp) => {
             password: password,
             returnSecureToken: true
         }
-        let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyC4Mt38VPwTpOFbvh_hyNIzL6iJWrkSwak'
+        let url = 'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCZ63wNJg_e6mVnj6qbsEfM6DtNLThR_AU'
         if (!isSignUp) {
-            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyC4Mt38VPwTpOFbvh_hyNIzL6iJWrkSwak'
+            url = 'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCZ63wNJg_e6mVnj6qbsEfM6DtNLThR_AU'
         }
         axios.post(url, authData)
             .then(response => {
-                let date = new Date()
-                let expireDate = date.getHours() * 600 + date.getMinutes() * 60 + date.getSeconds() + response.data.expiresIn
+                let expireDate = new Date()
+                expireDate = expireDate.getTime() / 1000 + Number(response.data.expiresIn)
                 localStorage.setItem('userId', response.data.localId)
                 localStorage.setItem('token', response.data.idToken);
                 localStorage.setItem('expireDate', expireDate)
@@ -79,18 +79,16 @@ export const checkAuth = () => {
         const token = localStorage.getItem('token');
         const userId = localStorage.getItem('userId')
         if (!token) {
-            console.log('logout')
             return dispatch(authLogout());
         }
         else {
             const expireDate = localStorage.getItem('expireDate')
             let dateCheck = new Date();
-            dateCheck = dateCheck.getHours() * 600 + dateCheck.getMinutes() * 60 + dateCheck.getSeconds()
-            if (expireDate < dateCheck ) {
-                console.log('logout')
+            dateCheck = dateCheck.getTime() / 1000
+            if (expireDate < dateCheck) {
                 return dispatch(authLogout());
             }
-            dispatch( authSuccess(token, userId) )
+            dispatch(authSuccess(token, userId))
         }
     };
 };

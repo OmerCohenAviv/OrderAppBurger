@@ -8,6 +8,8 @@ import * as actions from '../../store/actions/index';
 import Spinner from '../../components/UI/Spinner/Spinner';
 import { connect } from 'react-redux';
 import { Redirect } from 'react-router-dom';
+import { updateObject } from '../../store/utility/updateObject';
+import { checkValid} from '../../sharedFunctions/sharedFunctions';
 
 
 //Login page should be rendered  -> Authenticate ? Login UI : Login UI + dont have an account? -> Create one!
@@ -44,18 +46,18 @@ class Auth extends Component {
         },
         isSignUp: true
     };
+
+
     inputChangeHandler = (event, controlName) => {
-        let updateControls = {
-            ...this.state.controls
-        };
-        let updateElement = {
-            ...this.state.controls[controlName]
-        };
-        updateElement.value = event.target.value
-        updateElement.valid = this.checkValid(event.target.value, updateElement.validation)
-        updateElement.touched = true
-        updateControls[controlName] = updateElement
-        this.setState({ controls: updateControls })
+        const updateControl = updateObject(this.state.controls[controlName], {
+            value: event.target.value,
+            valid: checkValid(event.target.value, this.state.controls[controlName].validation),
+            touched: true
+        });
+        const updateControlsState = updateObject(this.state.controls, {
+            [controlName]: updateControl
+        })
+        this.setState({ controls: updateControlsState })
     }
 
     formSubmitHandler = (event) => {
@@ -68,21 +70,6 @@ class Auth extends Component {
         })
     }
 
-
-    checkValid = (value, rules) => {
-        //required - not an empty input
-        let isValid = true;
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-        if (rules.minLength) {
-            isValid = value.length >= rules.minLength && isValid;
-        }
-        if (rules.maxLength) {
-            isValid = value.length <= rules.maxLength && isValid
-        }
-        return isValid;
-    }
     render() {
         let formArray = [];
         for (let key in this.state.controls) {
@@ -112,19 +99,19 @@ class Auth extends Component {
                 <p stlye={{ color: 'red' }}>{this.props.error.message}</p>
             )
         }
-        let redirect = null
+        let redirect = null;
         if (this.props.isAuthenticated && !this.props.redirected) {
-            redirect = <Redirect to="/" />
+           return redirect = <Redirect to='/' />
         }
-        else if  (this.props.isAuthenticated && this.props.redirected) {
-            redirect = <Redirect to="/checkout" />
+         else  if (this.props.isAuthenticated && this.props.redirected) {
+            redirect = <Redirect to='/checkout' />
         }
         return (
             <div className={classes.Auth}>
-                {redirect}
                 {errorMessage}
+                {redirect}
                 <form onSubmit={this.formSubmitHandler}>
-                    {form}
+                    {form }
                     <Button
                         btnType='Success'>
                         Submit

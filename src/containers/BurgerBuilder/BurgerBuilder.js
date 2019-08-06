@@ -30,7 +30,6 @@ class BurgerBuilder extends Component {
             return this.setState({ purchasing: true })
         }
         else {
-            console.log('purchase')
             this.props.onRedirected()
             this.props.history.push('/login')
         }

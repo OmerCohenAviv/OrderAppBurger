@@ -4,14 +4,23 @@ import './App.css';
 import Layout from './hoc/Layout/Layout';
 import { connect } from 'react-redux'
 import * as actions from './store/actions/index';
-import { BrowserRouter, Route, Switch, Redirect } from 'react-router-dom';
+import { Route, Switch, Redirect, withRouter } from 'react-router-dom';
+import asyncComponent from './hoc/asyncComponent/asyncComponent';
 //containers
 import BurgerBuilder from './containers/BurgerBuilder/BurgerBuilder';
-import Checkout from './containers/Checkout/Checkout';
-import Orders from './containers/Orders/Orders';
-import Auth from './containers/Auth/Auth';
 import Logout from './containers/Auth/Logout/Logout';
 //containers
+const asyncAuth = asyncComponent(() => {
+    return import('./containers/Auth/Auth')
+})
+const asyncCheckout = asyncComponent(() => {
+    return import('./containers/Checkout/Checkout')
+})
+const asyncOrders = asyncComponent(() => {
+    return import('./containers/Orders/Orders')
+})
+
+
 
 class App extends Component {
     componentWillMount() {
@@ -20,29 +29,30 @@ class App extends Component {
     render() {
         let routes = (
             <Switch>
-                <Route path='/login' component={Auth} />
                 <Route path='/' exact component={BurgerBuilder} />
+                <Route path='/login' component={asyncAuth} />
+                <Route path='/checkout' component={asyncCheckout} />
                 <Redirect to='/' />
             </Switch>
         )
         if (this.props.isAuth) {
             routes = (
                 <Switch>
-                    <Route path='/checkout' component={Checkout} />
-                    <Route path='/orders' component={Orders} />
+                    <Route path='/checkout' component={asyncCheckout} />
+                    <Route path='/login' component={asyncAuth} />
+                    <Route path='/orders' component={asyncOrders} />
                     <Route path='/logout' component={Logout} />
                     <Route path='/' exact component={BurgerBuilder} />
+                    <Redirect to='/' />
                 </Switch>
-            )
+            );
         }
         return (
-            <BrowserRouter>
-                <div className="App">
-                    <Layout>
-                        {routes}
-                    </Layout>
-                </div>
-            </BrowserRouter>
+            <div className="App">
+                <Layout>
+                    {routes}
+                </Layout>
+            </div>
 
         );
     };
@@ -59,4 +69,4 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(App));

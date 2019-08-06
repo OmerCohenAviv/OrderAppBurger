@@ -9,6 +9,8 @@ import Spinner from '../../../components/UI/Spinner/Spinner';
 import Input from '../../../components/UI/Input/Input';
 import withErrorHandler from '../../../hoc/withErrorHandler/withErrorHandler'
 import * as orderActions from '../../../store/actions/index'
+import { updateObject } from '../../../store/utility/updateObject';
+import { checkValid } from '../../../sharedFunctions/sharedFunctions';
 
 class ContactData extends Component {
     state = {
@@ -99,16 +101,14 @@ class ContactData extends Component {
 
 
     changeValueHandler = (event, formElementType) => {
-        const updateOrderForm = {
-            ...this.state.orderForm
-        }
-        const orderFormElementUpdate = {
-            ...updateOrderForm[formElementType]
-        }
-        orderFormElementUpdate.value = event.target.value
-        orderFormElementUpdate.touched = true;
-        orderFormElementUpdate.valid = this.checkValid(orderFormElementUpdate.value, orderFormElementUpdate.validation)
-        updateOrderForm[formElementType] = orderFormElementUpdate;
+        const orderFormElementUpdate = updateObject(this.state.orderForm[formElementType], {
+            value: event.target.value,
+            touched: true,
+            valid: checkValid(event.target.value, this.state.orderForm[formElementType].validation)
+        });
+        const updateOrderForm = updateObject(this.state.orderForm, {
+            [formElementType]: orderFormElementUpdate
+        })
         let formIsValid = true;
         for (let elementValid in updateOrderForm) {
             formIsValid = updateOrderForm[elementValid].valid && formIsValid
@@ -130,21 +130,6 @@ class ContactData extends Component {
             PersonData: formData
         }
         this.props.onPurchaseBurger(order, this.props.token)
-    }
-
-    checkValid(value, rules) {
-        //required - not an empty input
-        let isValid = true;
-        if (rules.required) {
-            isValid = value.trim() !== '' && isValid;
-        }
-        if (rules.minLength) {
-            isValid = value.length <= rules.minLength && isValid;
-        }
-        if (rules.maxLength) {
-            isValid = value.length >= rules.maxLength && isValid
-        }
-        return isValid;
     }
     render() {
         const formElementsArray = [];

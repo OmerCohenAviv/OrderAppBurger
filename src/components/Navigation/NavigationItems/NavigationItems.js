@@ -13,7 +13,7 @@ const navigationItems = (props) => (
         {
             props.auth
                 ? <NavigationItem link="/logout">Logout</NavigationItem>
-                : <NavigationItem link={props.redirected ? '/checkout' : '/login'} >Authenticate</NavigationItem>
+                : <NavigationItem link="/login" >Authenticate</NavigationItem>
         }
     </ul>
 )

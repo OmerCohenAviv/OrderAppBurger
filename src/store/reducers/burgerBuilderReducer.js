@@ -39,26 +39,16 @@ const reducer = (state = initialState, action) => {
         //Setting Ingredients(From DB)
         case (actionTypes.SET_INGREDIENTS): {
             const updatedIngredients = updateObject(state.ingredients, action.ingredients)
-            const updatedState = {
-                ingredients: updatedIngredients,
-                error: false
-            }
+            const updatedState = { ingredients: updatedIngredients, error: false }
             return updateObject(state, updatedState)
         }
         //if catched error true >
         case (actionTypes.CHECK_ERROR_INGREDIENTS): {
-            const updatedState = {
-                error: true
-            }
-            return updateObject(state, updatedState)
+            return updateObject(state, { error: true })
         }
-        //Reseting ingredients/price after buying
+        //Reseting ingredients/price 
         case (actionTypes.RESET_BURGER): {
-            const updatedState = {
-                totalPrice: 4,
-                ingredients: null
-            }
-            return updateObject(state, updatedState)
+            return updateObject(state, { totalPrice: 4, ingredients: null })
         }
         default:
             return state

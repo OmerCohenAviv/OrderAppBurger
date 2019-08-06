@@ -5,8 +5,11 @@ const initialState = {
     token: null,
     userId: null,
     loading: false,
-    redirected: false
+    redirected: false,
+    error: null
 }
+
+
 
 const reducer = (state = initialState, action) => {
     switch (action.type) {
@@ -16,33 +19,23 @@ const reducer = (state = initialState, action) => {
 
         //Authentication Process Success.. 
         case (actionTypes.AUTH_SUCCESS):
-            return updateObject(state, {
-                token: action.token,
-                userId: action.userId,
-                error: false,   
-                loading: false
-            });
-            //Error 
+            let updateState = { token: action.token, userId: action.userId, error: false, loading: false }
+            return updateObject(state, updateState);
+        //Error 
         case (actionTypes.AUTH_FAIL):
-            return updateObject(state, {
-                error: action.error,
-                loading: false
-            });
+            return updateObject(state, { error: action.error , loading: false } )
 
+        //loggin out..
         case (actionTypes.AUTH_LOGOUT): {
-            return updateObject(state, {
-                token: null,
-                userId: null,
-                redirected: false
-            });
+            return updateObject(state, { token: null, userId: null, redirected: false } )
         }
+
+        //Redireting state (checkout/burgerBuilder)
         case (actionTypes.AUTH_REDIRECTED): {
-            return updateObject(state, {
-                redirected: !state.redirected
-            })
-        }   
+            return updateObject(state, { redirected: !state.redirected })
+        }
         default: return state
     };
 };
 
-export default reducer
+export default reducer;

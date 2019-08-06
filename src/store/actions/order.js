@@ -31,7 +31,6 @@ export const setOrders = (token) => {
         dispatch(startFetchOrder())
         axios.get('/orders.json?auth=' + token)
             .then(response => {
-                console.log(response)
                 const fetchedOrders = [];
                 for (let key in response.data) {
                     if (response.data[key].userId === localStorage.getItem('userId')) {
@@ -75,7 +74,6 @@ const orderFail = (error) => {
 export const purchaseBurgerAction = (orderData, token) => {
     return dispatch => {
         dispatch(orderStart())
-        console.log('Token' + token)
         axios.post('/orders.json?auth=' + token, orderData)
             .then(res => {
                 dispatch(orderSuccess(res.data.name, orderData));
