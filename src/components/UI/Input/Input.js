@@ -31,8 +31,7 @@ const input = (props) => {
         case ('select'):
             inputElement =
                 <select
-                    className={inputClasses}
-                    placeholder={props.elementConfig.placeholder}>
+                    className={inputClasses}>
                     {props.elementConfig.options.map(opt => (
                         <option key={opt.value} value={opt.value}>{opt.displayValue}</option>
                     ))
